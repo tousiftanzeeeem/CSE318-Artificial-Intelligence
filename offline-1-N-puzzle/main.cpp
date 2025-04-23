@@ -4,11 +4,12 @@ using namespace std;
 #define optimize() ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
 
 
-map<int, int (*)(vector<vector<int>>)> mp;
+
+map<int, float (*)(vector<vector<int>>)> mp;
 
 
 
-int manhattan(vector<vector<int>> grid) {
+float manhattan(vector<vector<int>> grid) {
     int n = grid.size();         
     int dist = 0;                 
 
@@ -27,7 +28,7 @@ int manhattan(vector<vector<int>> grid) {
     return dist;
 }
 
-int hamming(vector<vector<int>> grid) {
+float hamming(vector<vector<int>> grid) {
     int n = grid.size();
     int expected = 1;
     int count = 0;
@@ -43,9 +44,9 @@ int hamming(vector<vector<int>> grid) {
     return count;
 }
 
-int eucledian(vector<vector<int>> grid) {
+float eucledian(vector<vector<int>> grid) {
     int n = grid.size();
-    double dist = 0.0;
+    float dist = 0.0;
 
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
@@ -60,7 +61,7 @@ int eucledian(vector<vector<int>> grid) {
     return round(dist);
 }
 
-int Linear_conflict(vector<vector<int>> grid) {
+float Linear_conflict(vector<vector<int>> grid) {
     int n = grid.size();
     int manh = manhattan(grid);
     int conflicts = 0;
@@ -117,10 +118,10 @@ void setup(){
 
 class AStarSearch{
 protected:
-        static int (*heuristic)(vector<vector<int>>);
+        static float (*heuristic)(vector<vector<int>>);
 public:
-    void set_heuristic(int (*func_pointer)(vector<vector<int>>)){
-            heuristic = func_pointer;
+    void set_heuristic(float (*func_pointer)(vector<vector<int>>)){
+          heuristic = func_pointer;
     }
 };
 
@@ -168,7 +169,7 @@ bool is_goal() {
 
 };
 
-int (*AStarSearch::heuristic)(vector<vector<int>>) = nullptr;
+float (*AStarSearch::heuristic)(vector<vector<int>>) = nullptr;
 
 vector<Node*> generate_successors(Node* current_node) {
     vector<Node*> successors;
@@ -288,11 +289,11 @@ int main(){
 
     Node *node =  new Node(graph,NULL,0);
     // node->print_grid();
-    int intial_priority = node->g_n + node->h_n;
+    float intial_priority = node->g_n + node->h_n;
     // cout<<"Heuristic value is "<<intial_priority<<endl;
 
 
-    priority_queue<pair<int, Node*>, vector<pair<int, Node*>>, greater<pair<int, Node*>>> pq;
+    priority_queue<pair<float, Node*>, vector<pair<float, Node*>>, greater<pair<float, Node*>>> pq;
     pq.push({intial_priority,node});
 
 
@@ -338,10 +339,10 @@ int main(){
 
             if(is_solvable(it->board())){
 
-                if(!closed_set.count(flatten(it->board()))){
+               if(!closed_set.count(flatten(it->board()))){
                 explored++;
                 pq.push({it->g_n+it->h_n,it});
-                }
+               }
             }
         }
 
