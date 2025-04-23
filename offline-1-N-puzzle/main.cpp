@@ -4,14 +4,13 @@ using namespace std;
 #define optimize() ios_base::sync_with_stdio(0);cin.tie(0);cout.tie(0);
 
 
-
 map<int, float (*)(vector<vector<int>>)> mp;
 
 
 
 float manhattan(vector<vector<int>> grid) {
     int n = grid.size();         
-    int dist = 0;                 
+    float dist = 0;                 
 
     for (int i = 0; i < n; ++i) {          
         for (int j = 0; j < n; ++j) {       
@@ -31,7 +30,7 @@ float manhattan(vector<vector<int>> grid) {
 float hamming(vector<vector<int>> grid) {
     int n = grid.size();
     int expected = 1;
-    int count = 0;
+    float count = 0;
     
     for (int i = 0; i < n; ++i) {
         for (int j = 0; j < n; ++j) {
@@ -63,8 +62,8 @@ float eucledian(vector<vector<int>> grid) {
 
 float Linear_conflict(vector<vector<int>> grid) {
     int n = grid.size();
-    int manh = manhattan(grid);
-    int conflicts = 0;
+    float manh = manhattan(grid);
+    float conflicts = 0;
 
     // Row conflicts
     for (int row = 0; row < n; ++row) {
@@ -361,6 +360,5 @@ int main(){
     cout<<"Explored node count is "<<explored<<endl;
     cout<<"Expanded node count is "<<expanded<<endl;
 }
-
 
 
