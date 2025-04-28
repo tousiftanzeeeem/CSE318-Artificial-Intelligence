@@ -284,26 +284,30 @@ int main() {
         return 0;
     }
 
-    priority_queue<pair<float, Node*>, vector<pair<float, Node*>>, greater<pair<float, Node*>>> pq;
-    pq.push({start_node->g_n + start_node->h_n, start_node});
+priority_queue<pair<pair<float, float>, Node*>, vector<pair<pair<float, float>, Node*>>, greater<pair<pair<float, float>, Node*>>> pq;
+pq.push({{start_node->g_n + start_node->h_n, start_node->h_n}, start_node});
+
 
     unordered_set<string> closed_set;
-
+     // map<string,int>closed_set;
     int explored = 0;
     int expanded = 0;
 
     Node* goal_node = nullptr;
-
+    explored++;
     while (!pq.empty()) {
         auto current = pq.top();
         pq.pop();
         Node* node = current.second;
-        expanded++;
-
+       
         string current_state = flatten(node->board());
 
         if (closed_set.count(current_state)) continue;
         closed_set.insert(current_state);
+        // if (closed_set[current_state]) continue;
+        // closed_set[current_state] = 1;
+
+        expanded++;
 
         if (node->is_goal()) {
             goal_node = node;
@@ -315,7 +319,7 @@ int main() {
             string successor_state = flatten(successor->board());
             if (!closed_set.count(successor_state)) {
                 explored++;
-                pq.push({successor->g_n + successor->h_n, successor});
+                pq.push({{successor->g_n + successor->h_n, successor->h_n}, successor});
             }
         }
     }
@@ -346,5 +350,6 @@ int main() {
 
     return 0;
 }
+
 
 
