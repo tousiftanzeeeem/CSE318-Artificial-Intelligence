@@ -125,9 +125,9 @@ public:
 };
 
 class Node : public AStarSearch{
-    Node *parentnode = NULL;
     vector<vector<int>>grid;
 public:
+    Node *parentnode = NULL;
     int g_n;
     int h_n;
     Node(vector<vector<int>>graph,Node* parent,int gn){
@@ -254,111 +254,97 @@ string flatten(vector<vector<int>> grid) {
     return s;
 }
 
+int main() {
+    cout << "Enter Grid size" << endl;
+    int k; 
+    cin >> k;
 
-int main(){
+    cout << "Enter Heuristic Function " << endl;
+    cout << "0. Manhattan" << endl;
+    cout << "1. Hamming" << endl;
+    cout << "2. Eucledian" << endl;
+    cout << "3. Linear_conflict" << endl;
+    int hue; 
+    cin >> hue;
 
-
-    cout<<"Enter Grid size"<<endl;
-    int k; cin>>k;
-
-
-
-    cout<<"Enter Heuristic Function "<<endl;
-    cout<<"0. Manhattan"<<endl;
-    cout<<"1. Hamming"<<endl;
-    cout<<"2. Eucledian"<<endl;
-    cout<<"3. Linear_conflict"<<endl;
-    int hue; cin>>hue;
-
-
-
-    cout<<"Enter initial Grid Configuration"<<endl;
+    cout << "Enter initial Grid Configuration" << endl;
     vector<vector<int>> graph(k, vector<int>(k));
-    for(int i = 0;i<k;i++){
-        for(int j = 0;j<k;j++) cin>>graph[i][j];
+    for (int i = 0; i < k; i++) {
+        for (int j = 0; j < k; j++) cin >> graph[i][j];
     }
 
-
-
     setup();
-    AStarSearch search = AStarSearch();
-    search.set_heuristic(mp[hue]);  
+    AStarSearch search;
+    search.set_heuristic(mp[hue]);
 
+    Node *start_node = new Node(graph, nullptr, 0);
 
-
-    Node *node =  new Node(graph,NULL,0);
-    // node->print_grid();
-    float intial_priority = node->g_n + node->h_n;
-    // cout<<"Heuristic value is "<<intial_priority<<endl;
-
-
-    priority_queue<pair<float, Node*>, vector<pair<float, Node*>>, greater<pair<float, Node*>>> pq;
-    pq.push({intial_priority,node});
-
-
-    vector<Node*>closed_list;
-    unordered_set<string> closed_set;
-
-
-    if(!is_solvable(node->board())){
-        cout<<"Unsolvable puzzle"<<endl;
+    if (!is_solvable(start_node->board())) {
+        cout << "Unsolvable puzzle" << endl;
         return 0;
     }
 
+    priority_queue<pair<float, Node*>, vector<pair<float, Node*>>, greater<pair<float, Node*>>> pq;
+    pq.push({start_node->g_n + start_node->h_n, start_node});
+
+    unordered_set<string> closed_set;
 
     int explored = 0;
     int expanded = 0;
 
-    
-    while(!pq.empty()){
-        auto x = pq.top();
-        expanded++;
+    Node* goal_node = nullptr;
+
+    while (!pq.empty()) {
+        auto current = pq.top();
         pq.pop();
-        
-        // printing current node
-        // cout<<"current_node is "<<endl;
-        // x.second->print_grid();cout<<endl<<endl;
-        
-        // converting grid digits to string
-        string current_state = flatten(x.second->board());
+        Node* node = current.second;
+        expanded++;
 
-        // checking current is present in closed list or not solvable
+        string current_state = flatten(node->board());
+
         if (closed_set.count(current_state)) continue;
-        if(!is_solvable(x.second->board())) continue;
-
-        // inserting popped node to closed list
         closed_set.insert(current_state);
-        closed_list.push_back(x.second);
 
-        // checking current node is the goal state or not
-        if(x.second->is_goal()) break;
-
-        vector<Node*> succesors = generate_successors(x.second);
-        for(auto it:succesors){
-
-            if(is_solvable(it->board())){
-
-               if(!closed_set.count(flatten(it->board()))){
-                explored++;
-                pq.push({it->g_n+it->h_n,it});
-               }
-            }
+        if (node->is_goal()) {
+            goal_node = node;
+            break;
         }
 
+        vector<Node*> successors = generate_successors(node);
+        for (auto successor : successors) {
+            string successor_state = flatten(successor->board());
+            if (!closed_set.count(successor_state)) {
+                explored++;
+                pq.push({successor->g_n + successor->h_n, successor});
+            }
+        }
     }
 
-    if(!is_solvable(closed_list[closed_list.size()-1]->board())){
-        cout<<"Unsolvable puzzle"<<endl;
+    if (goal_node == nullptr) {
+        cout << "No solution found" << endl;
         return 0;
     }
 
-    cout<<"Minimum number of moves = " << closed_list.size()-1<<endl;
-    for(auto it:closed_list) {
-        it->print_grid();cout<<endl<<endl;
+    // Reconstruct and print the path
+    vector<Node*> path;
+    Node* node = goal_node;
+    while (node != nullptr) {
+        path.push_back(node);
+        node = node->parentnode; // traverse using parent pointers
     }
 
-    cout<<"Explored node count is "<<explored<<endl;
-    cout<<"Expanded node count is "<<expanded<<endl;
+    reverse(path.begin(), path.end());
+
+    cout << "Minimum number of moves = " << path.size() - 1 << endl;
+    for (auto it : path) {
+        it->print_grid();
+        cout << endl << endl;
+    }
+
+    cout << "Explored node count is " << explored << endl;
+    cout << "Expanded node count is " << expanded << endl;
+
+    return 0;
 }
 
 
