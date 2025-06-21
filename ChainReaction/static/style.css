@@ -1,0 +1,85 @@
+/* static/style.css */
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+h1 {
+    color: #0056b3;
+}
+
+#status-message {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+#game-board {
+    display: grid;
+    /* grid-template-columns and grid-template-rows will be set by JavaScript */
+    border: 2px solid #555;
+    background-color: #eee;
+    width: fit-content;
+    box-shadow: 2px 2px 8px rgba(0,0,0,0.2);
+}
+
+.cell {
+    width: 60px; /* CELL_SIZE from Python */
+    height: 60px; /* CELL_SIZE from Python */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px; /* FONT_SIZE_COUNT from Python */
+    font-weight: bold;
+    border: 1px solid #ccc;
+    box-sizing: border-box; /* Include padding and border in the element's total width and height */
+    cursor: pointer;
+    background-color: lightgray;
+    color: black;
+    transition: background-color 0.2s, border-color 0.2s;
+}
+
+.cell:hover {
+    filter: brightness(0.95); /* Slight darkening on hover */
+}
+
+.cell.red-player {
+    background-color: #FFCCCC; /* Light Red */
+    color: red;
+}
+
+.cell.blue-player {
+    background-color: #CCE0FF; /* Light Blue */
+    color: blue;
+}
+
+.cell.critical-mass {
+    border: 2px solid #FFD700; /* Gold/Yellow border */
+    box-shadow: 0 0 8px #FFD700; /* Yellow glow */
+}
+
+/* Styles for game over */
+.game-over-cell {
+    cursor: default; /* No pointer when game is over */
+}
+
+#reset-button {
+    margin-top: 25px;
+    padding: 10px 20px;
+    font-size: 1em;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#reset-button:hover {
+    background-color: #0056b3;
+}
